@@ -38,9 +38,8 @@ export const setupServer = async () => {
     const { contactId } = req.params;
     const contact = await getContactById(contactId);
 
-    if (contact === null) {
-      return res.status(404).send({
-        status: 404,
+    if (!contact) {
+      return res.status(404).json({
         message: 'Contact not found',
       });
     }
@@ -52,13 +51,15 @@ export const setupServer = async () => {
     });
   });
 
+  // Обработка несуществующих маршрутов
   app.use((req, res) => {
     res.status(404).json({
       message: 'Not found',
     });
   });
 
-  app.use((err, req, res) => {
+  // Обработка внутренних ошибок
+  app.use((err, req, res, next) => {
     res.status(500).json({
       message: 'Something went wrong',
       error: err.message,
