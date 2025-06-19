@@ -1,7 +1,6 @@
 {
   "name": "nodejs-hw-mongodb",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -24,7 +23,8 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongodb": "^6.16.0",
-    "mongoose": "^8.14.2",
+    "mongoose": "^8.16.0",
     "pino-http": "^10.4.0"
-  }
+  },
+  "description": ""
 }
