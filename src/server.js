@@ -23,9 +23,9 @@ export const setupServer = async () => {
     }),
   );
 
-  app.get('/', (req, res) => {
-    res.send('Helo World!');
-  });
+  // app.get('/', (req, res) => {
+  //   res.send('Helo World!');
+  // });
 
   app.use(contactsRouter);
 
