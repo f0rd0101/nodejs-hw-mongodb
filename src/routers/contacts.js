@@ -16,12 +16,12 @@ import { createContactSchema, updateContactSchema } from '../validation/contacts
 const router = Router();
 const jsonParser = express.json();
 
-router.get('/', ctrlWrapper(getContactsController));
-router.get('/:contactId',isValidId, ctrlWrapper(getContactByIdController));
-router.post('/', validateBody(createContactSchema), jsonParser, ctrlWrapper(createContactController));
-router.delete('/:contactId/',isValidId, ctrlWrapper(deleteContactController));
+router.get('/contacts', ctrlWrapper(getContactsController));
+router.get('/contacts/:contactId',isValidId, ctrlWrapper(getContactByIdController));
+router.post('/contacts', validateBody(createContactSchema), jsonParser, ctrlWrapper(createContactController));
+router.delete('/contacts/:contactId/',isValidId, ctrlWrapper(deleteContactController));
 router.patch(
-  '/:contactId/',isValidId, validateBody(updateContactSchema),
+  '/contacts/:contactId/',isValidId, validateBody(updateContactSchema),
   jsonParser,
   ctrlWrapper(patchContactController),
 );
