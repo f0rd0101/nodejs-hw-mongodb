@@ -7,6 +7,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import authRoutes from './routers/auth.js';
 import cookieParser from 'cookie-parser';
+import {auth} from "./middlewares/auth.js";
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -29,7 +30,7 @@ export const setupServer = async () => {
   // Роуты
   app.use(cookieParser());
   app.use('/auth', authRoutes);
-  app.use(contactsRouter);
+  app.use(auth,contactsRouter);
 
   // Обработчик 404 — когда роут не найден
   app.use(notFoundHandler);
