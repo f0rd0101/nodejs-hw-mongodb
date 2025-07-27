@@ -6,7 +6,7 @@ export async function auth(req,res,next){
     if(typeof authorization !='string'){
         throw new createHttpError.Unauthorized("Please provide access token");
     };
-    const [bearer, accessToken] = authorization.split("",2);
+    const [bearer, accessToken] = authorization.split(" ",2);
     if(bearer != "Bearer" || typeof accessToken !="string"){
      throw new createHttpError.Unauthorized("Please provide access token");
     };

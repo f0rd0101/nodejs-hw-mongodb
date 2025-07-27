@@ -16,7 +16,7 @@ export const getContactsController = async (req, res, next) => {
     
     
   try {
-    const contacts = await getAllContacts(page,perPage, sortBy,sortOrder);
+    const contacts = await getAllContacts(page,perPage, sortBy,sortOrder, req.user.id);
 
     res.status(200).json({
       status: 200,
@@ -44,7 +44,7 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const contact = await createContact(req.body);
+  const contact = await createContact({...req.body, userId: req.user.id});
 
   res.status(201).json({
     status: 201,
