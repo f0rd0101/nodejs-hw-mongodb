@@ -3,6 +3,10 @@ import createHttpError from 'http-errors';
 import { Session } from "../db/models/session.js";
 import {User} from '../db/models/user.js';
 import crypto from "node:crypto";
+import { sendMail } from "../utils/sendMail.js";
+import { requestPasswordResetSchema } from "../validation/auth.js";
+import jwt from "jsonwebtoken";
+import {getEnvVar} from '../utils/getEnvVar.js';
 export async function registerUser(payload){
     const user = await User.findOne({email: payload.email});
 
@@ -62,3 +66,24 @@ export async function refreshSession(sessionId,refreshToken){
      refreshTokenValidUntil: new Date(Date.now() + (24 * 60 * 60 * 1000) * 30) // 30 days,
     });
 };
+
+export async function requestPasswordReset(email){
+  const user = await User.findOne({email});
+  if(user == null){
+    throw new createHttpError.NotFound("User not found");
+  }
+  const token = jwt.sign({
+    sub: user._id,
+    name: user.name
+
+  },getEnvVar("JWT_SECRET"),{
+    expiresIn: "5m"
+  });
+  await sendMail({
+     from: getEnvVar("SMTP_FROM"),
+     to:email,
+     subject : "Reset password",
+     html: ` ${getEnvVar('APP_DOMAIN')}/?token=${token}`
+  });
+  
+}

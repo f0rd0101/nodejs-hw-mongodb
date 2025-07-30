@@ -1,4 +1,4 @@
-import { loginUser, registerUser, logoutUser,refreshSession } from "../services/auth.service.js";
+import { loginUser, registerUser, logoutUser,refreshSession, requestPasswordReset } from "../services/auth.service.js";
 export async function registerController(req,res){
 
     const user = await registerUser(req.body);
@@ -58,4 +58,9 @@ export async function refreshController(req,res){
         accessToken: session.accessToken
     }
    });
+}
+export async function requestPasswordResetController(req,res) {
+const {email} = req.body;
+   await requestPasswordReset(email);
+    res.json({status:200, message: "KOK"});
 }
