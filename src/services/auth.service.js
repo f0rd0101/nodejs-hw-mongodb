@@ -87,3 +87,20 @@ export async function requestPasswordReset(email){
   });
   
 }
+export async function resetPassword(token,password) {
+  try{
+const decoded = jwt.verify(token, getEnvVar("JWT_SECRET"));
+ const user = await User.findById(decoded.sub);
+ if(user == null){
+  throw new createHttpError.NotFound("User not found!");
+ }
+
+ const hashedPassword = await bcrypt.hash(password, 10);
+  await User.findByIdAndUpdate(user._id, {password:hashedPassword});
+  }
+  catch(error){
+  console.error("Reset password error:", error);
+  throw error; // 👈 пробрось ошибку в контроллер
+  
+  }
+}
