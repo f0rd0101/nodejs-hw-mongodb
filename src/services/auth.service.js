@@ -79,12 +79,24 @@ export async function requestPasswordReset(email){
   },getEnvVar("JWT_SECRET"),{
     expiresIn: "5m"
   });
+
+try{
   await sendMail({
      from: getEnvVar("SMTP_FROM"),
      to:email,
      subject : "Reset password",
      html: ` ${getEnvVar('APP_DOMAIN')}/?token=${token}`
   });
+}
+catch(error){
+throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+      { cause: error },
+    );
+};
+
+
   
 }
 export async function resetPassword(token,password) {
@@ -99,8 +111,9 @@ const decoded = jwt.verify(token, getEnvVar("JWT_SECRET"));
   await User.findByIdAndUpdate(user._id, {password:hashedPassword});
   }
   catch(error){
-  console.error("Reset password error:", error);
-  throw error; // 👈 пробрось ошибку в контроллер
+    if(error.name == "TokenExpiredError" || error.name == "JsonWebTokenError"){
+      throw new createHttpError.Unauthorized("Token is expired or invalid.");
+    };
   
   }
 }
