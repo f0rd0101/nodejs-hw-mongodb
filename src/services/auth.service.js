@@ -1,12 +1,18 @@
 import bcrypt from "bcrypt";
+import fs from 'node:fs';
+import path from "node:path";
 import createHttpError from 'http-errors';
 import { Session } from "../db/models/session.js";
 import {User} from '../db/models/user.js';
 import crypto from "node:crypto";
 import { sendMail } from "../utils/sendMail.js";
 import { requestPasswordResetSchema } from "../validation/auth.js";
+import Handlebars from "handlebars";
 import jwt from "jsonwebtoken";
 import {getEnvVar} from '../utils/getEnvVar.js';
+
+
+const REQUEST_PASSWORD_RESET_TEMPLATE = fs.readFileSync(path.resolve("src/templates/request-reset-password.hbs"),{encoding: "utf-8"});
 export async function registerUser(payload){
     const user = await User.findOne({email: payload.email});
 
@@ -80,12 +86,15 @@ export async function requestPasswordReset(email){
     expiresIn: "5m"
   });
 
+  const template = Handlebars.compile(REQUEST_PASSWORD_RESET_TEMPLATE);
+
 try{
   await sendMail({
      from: getEnvVar("SMTP_FROM"),
      to:email,
      subject : "Reset password",
-     html: ` ${getEnvVar('APP_DOMAIN')}/?token=${token}`
+     html: template({ name:user.name ,link: `${getEnvVar('APP_DOMAIN')}/?token=${token}` })
+
   });
 }
 catch(error){
