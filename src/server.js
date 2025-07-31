@@ -8,6 +8,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import authRoutes from './routers/auth.js';
 import cookieParser from 'cookie-parser';
 import {auth} from "./middlewares/auth.js";
+import path from "node:path";
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -17,6 +18,7 @@ export const setupServer = async () => {
   // Парсинг JSON тела и CORS — должны идти ДО роутов!
   app.use(express.json());
   app.use(cors());
+
 
   // Логгер — тоже лучше раньше, чтобы логировал все запросы
   app.use(
@@ -29,8 +31,11 @@ export const setupServer = async () => {
 
   // Роуты
   app.use(cookieParser());
+  app.use("/avatars", express.static(path.resolve("src/uploads/avatars")));
+
   app.use('/auth', authRoutes);
   app.use(auth,contactsRouter);
+
 
   // Обработчик 404 — когда роут не найден
   app.use(notFoundHandler);

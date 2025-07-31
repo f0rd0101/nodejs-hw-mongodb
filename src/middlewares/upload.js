@@ -7,7 +7,8 @@ destination: function(req,file,cb){
 
 },
 filename: function(req,file,cb){
- cb(null, file.originalname);
+ const uniquePrefix = Date.now() + '-' + Math.round(Math.random() * 1E9 );
+ cb(null, `${uniquePrefix}_${file.originalname}`);
 }
 });
 

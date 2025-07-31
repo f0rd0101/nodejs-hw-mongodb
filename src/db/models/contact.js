@@ -2,6 +2,10 @@ import { model, Schema } from 'mongoose';
 
 const contactSchema = new Schema(
   {
+    avatar:{
+   type:String,
+   default: null,
+    },
     name: {
       type: String,
       required: true,

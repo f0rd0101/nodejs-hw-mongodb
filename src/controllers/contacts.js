@@ -5,9 +5,13 @@ import {
   getAllContacts,
   getContactById,
 } from '../services/contacts.js';
+import * as fs from "node:fs/promises";
+import path from "node:path";
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import {uploadToCloudinary} from '../utils/uploadToCloudinary.js';
+
 
 export const getContactsController = async (req, res, next) => {
     const {page,perPage} = parsePaginationParams(req.query);
@@ -47,7 +51,14 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res, next) => {
-  const contact = await createContact({...req.body, userId: req.user.id});
+  // await fs.rename(req.file.path, path.resolve("src/uploads/avatars", req.file.filename));
+  const result = await uploadToCloudinary(req.file.path);
+  await fs.unlink(req.file.path);
+  
+
+
+
+  const contact = await createContact({...req.body,avatar: result.secure_url, userId: req.user.id});
 
   res.status(201).json({
     status: 201,
