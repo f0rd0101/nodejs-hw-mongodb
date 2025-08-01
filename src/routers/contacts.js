@@ -18,11 +18,11 @@ const jsonParser = express.json();
 
 router.get('/contacts', ctrlWrapper(getContactsController));
 router.get('/contacts/:contactId',isValidId, ctrlWrapper(getContactByIdController));
-router.post('/contacts',upload.single("avatar"), validateBody(createContactSchema), jsonParser, ctrlWrapper(createContactController));
+router.post('/contacts',upload.single("photo"), validateBody(createContactSchema), jsonParser, ctrlWrapper(createContactController));
 router.delete('/contacts/:contactId/',isValidId, ctrlWrapper(deleteContactController));
 router.patch(
   '/contacts/:contactId/',isValidId, validateBody(updateContactSchema),
-  jsonParser, upload.single("avatar"),
+  jsonParser, upload.single("photo"),
   ctrlWrapper(patchContactController),
 );
 

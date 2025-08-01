@@ -31,7 +31,7 @@ export const setupServer = async () => {
 
   // Роуты
   app.use(cookieParser());
-  app.use("/avatars", express.static(path.resolve("src/uploads/avatars")));
+  app.use("/photos", express.static(path.resolve("src/uploads/avatars")));
 
   app.use('/auth', authRoutes);
   app.use(auth,contactsRouter);

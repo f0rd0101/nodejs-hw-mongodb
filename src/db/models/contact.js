@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose';
 
 const contactSchema = new Schema(
   {
-    avatar:{
+    photo:{
    type:String,
    default: null,
     },
