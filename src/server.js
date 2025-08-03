@@ -9,6 +9,11 @@ import authRoutes from './routers/auth.js';
 import cookieParser from 'cookie-parser';
 import {auth} from "./middlewares/auth.js";
 import path from "node:path";
+import swaggerUi from "swagger-ui-express";
+import fs from "node:fs";
+
+
+const SWAGGER_DOCUMENT = JSON.parse(fs.readFileSync(path.join("docs", "swagger.json")));
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -18,6 +23,8 @@ export const setupServer = async () => {
   // Парсинг JSON тела и CORS — должны идти ДО роутов!
   app.use(express.json());
   app.use(cors());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(SWAGGER_DOCUMENT));
+
 
 
   // Логгер — тоже лучше раньше, чтобы логировал все запросы
@@ -30,6 +37,7 @@ export const setupServer = async () => {
   );
 
   // Роуты
+
   app.use(cookieParser());
   app.use("/photos", express.static(path.resolve("src/uploads/avatars")));
 
