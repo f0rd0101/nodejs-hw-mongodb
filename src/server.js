@@ -27,6 +27,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(SWAGGER_DOCUMENT));
 
 
 
+
   // Логгер — тоже лучше раньше, чтобы логировал все запросы
   app.use(
     pino({
